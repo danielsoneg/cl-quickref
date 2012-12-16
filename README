@@ -1,0 +1,17 @@
+Command-Line Reference Scripts
+======
+A collection of scripts to quickly query sites. Best used with [DTerm](http://decimus.net/DTerm), [TotalTerminal](http://totalterminal.binaryage.com/) or [Quicksilver](http://qsapp.com)
+
+Scripts
+=====
+wolf
+----
+Query Wolfram Alpha
+
+wp
+--
+Query Wikipedia
+
+translate
+-----
+Translate with Google Translate
