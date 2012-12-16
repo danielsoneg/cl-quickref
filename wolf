@@ -1,0 +1,37 @@
+#!/usr/bin/env python
+import json
+import sys
+
+from argparse import ArgumentParser
+from requests import get
+from bs4 import BeautifulSoup as soup
+
+URL = 'http://api.wolframalpha.com/v2/query'
+
+class WolfException(Exception):
+  """Raised for problems querying Wolfram"""
+
+def wolf(query, appid):
+  query = {'input':query, 'appid':appid}
+  wolf_request = get(URL, params=query)
+  if wolf_request.status_code != 200:
+    raise WolfException('Bad response from Wolfram')
+  wolf_soup = soup(wolf_request.text)
+  try:
+    primary_pod = wolf_soup.find(name='pod', attrs={'primary':'true'})
+    answer = primary_pod.find('plaintext').text
+  except AttributeError:
+    raise WolfException("Wolfram didn't answer the question.")
+  return answer
+
+def main():
+  query = sys.argv[1:]
+  with open('access.json') as access_file:
+    appid = json.load(access_file)['wolf']
+  try:
+    print wolf(query, appid)
+  except WolfException as wolf_exc:
+    print "Query failed: %s" % wolf_exc.args[0]
+
+if __name__ == "__main__":
+  main()
